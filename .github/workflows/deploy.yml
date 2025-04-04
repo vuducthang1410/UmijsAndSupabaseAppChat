@@ -24,7 +24,7 @@ jobs:
       - name: Build the project
         run: npm run build
 
-        - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         run: |
           # Xóa remote origin nếu nó đã tồn tại
           git remote rm origin || echo "Remote 'origin' does not exist, skipping..."
