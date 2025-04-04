@@ -40,6 +40,6 @@ jobs:
 
       - name: Push changes
         run: |
-          git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git
+          git push https://github-actions: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@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
