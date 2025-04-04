@@ -1,53 +1,43 @@
-name: Deploy to GitHub Pages
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Thay "main" bằng nhánh bạn muốn deploy từ đó (ví dụ "master")
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Cấp quyền ghi cho nội dung (cần khi push thay đổi)
+
     steps:
-      # Checkout mã nguồn
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Cài đặt node.js và pnpm (hoặc npm, yarn nếu bạn dùng chúng)
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Hoặc bất kỳ phiên bản node.js nào bạn đang dùng
-          
+          node-version: '20'
+
+      - name: Install latest pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
-        run: |
-          npm install -g pnpm  # Cài đặt pnpm nếu bạn đang dùng pnpm
-          pnpm install
+        run: pnpm install
 
-      # Build ứng dụng Umijs
-      - name: Build app
-        run: pnpm run build
+      - name: Build project
+        run: pnpm run build  # Build để tạo thư mục dist/
 
-      # Set up Git config để thực hiện commit
-      - name: Set up Git config
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      # Tạo một commit mới và push lên GitHub Pages
       - name: Deploy to GitHub Pages
         run: |
-          # Xóa remote origin cũ
-          git remote rm origin
-          # Thêm remote mới với token
-          git remote add origin https://github.com/${{ github.repository }}.git
-          
-          # Thực hiện commit và push lên nhánh gh-pages
-          git add --all
-          git commit -m "chore(deploy): deploy to GitHub Pages"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages
-
-      # Xóa build folder sau khi deploy (tuỳ chọn)
-      - name: Clean up build
-        run: |
-          rm -rf dist
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git add dist/*  # Thêm tất cả file từ thư mục dist/
+          git commit -m "Deploy to GitHub Pages"
+          git push --force "https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git" main:gh-pages  # Push lên branch gh-pages
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
