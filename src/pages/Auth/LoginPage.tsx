@@ -1,8 +1,8 @@
 import LoadingOverlay from '@/components/Loading';
-import { history, useDispatch, useSelector } from '@umijs/max';
+import { history, useDispatch, useModel, useSelector } from '@umijs/max';
 import { message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { AuthDataRq } from 'types/auth';
+import { AuthDataRp, AuthDataRq } from 'types/auth';
 import { DataCallback } from 'types/reponse';
 import '././style/styles.css';
 
@@ -12,8 +12,9 @@ const Login: React.FC = () => {
     password: '',
   });
   const dispatch = useDispatch();
-  //   const { setInitialState } = useModel('@@initialState');
-  const { authData, loading } = useSelector((state: any) => state.auth);
+  const { setInitialState } = useModel('@@initialState');
+  const { authData, loading, isLogin, isCheckProfile, isCompleteProfile } =
+    useSelector((state: any) => state.auth);
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     dispatch({
@@ -28,30 +29,29 @@ const Login: React.FC = () => {
       },
     });
   };
-  //   useEffect(() => {
-  //     if (user)
-  //       if (user.isLogin) {
-  //         console.log(user);
-  //         setInitialState((prev) => ({ ...prev, currentUser: user }));
-  //         const pathName = localStorage.getItem('pathname');
-  //         if (pathName) {
-  //           history.push(pathName);
-  //         } else {
-  //           history.push('/');
-  //         }
-  //       }
-  //   }, [user]);
   useEffect(() => {
-    console.log(authData);
-  }, [authData]);
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
+    if (authData && isCheckProfile)
+      if (isLogin) {
+        setInitialState((prev: AuthDataRp) => ({
+          ...prev,
+          currentUser: authData,
+        }));
+        const pathName = localStorage.getItem('pathname');
+        if (isCompleteProfile) {
+          if (pathName && pathName !== '/auth/log-out') {
+            history.push(pathName);
+          } else {
+            history.push('/');
+          }
+        } else {
+          history.push('/profile/complete');
+        }
+      }
+  }, [isCheckProfile]);
   return (
     <div
       className="login-page"
       style={{
-        // width: '100%',
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',

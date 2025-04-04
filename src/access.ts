@@ -1,12 +1,12 @@
-import { User } from "types/user";
+import { useUserRole } from "./components/hook/useUserRole";
+import { getRoleInToken } from "./utils/format";
 
-export default function access(initialState: { currentUser?: User | null }) {
-  const { currentUser } = initialState || { currentUser: null };
+export default function access() {
+  const role = getRoleInToken()
   return {
-    isAdmin: currentUser?.role === 'ADMIN',
-    isManager: currentUser?.role === 'STAFF',
-    isUser: currentUser?.role === 'CUSTOMER',
-    isAdminOrManager:
-      currentUser?.role === 'ADMIN' || currentUser?.role === 'manager',
+    isAdmin: role === 'ADMIN',
+    // isManager: currentUser?.role === 'STAFF',
+    isUser: role === 'CUSTOMER',
+    isAdminOrManager: role === 'ADMIN' || role === 'manager',
   };
 }

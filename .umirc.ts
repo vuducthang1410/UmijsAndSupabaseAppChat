@@ -8,7 +8,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: '@umijs/max',
+    title: 'KLB-Chat',
   },
   routes: [
     {
@@ -16,22 +16,54 @@ export default defineConfig({
       redirect: '/home',
     },
     {
-      name: '首页',
+      name: 'Trang chủ',
       path: '/home',
       component: './Home',
       wrappers: ['@/pages/Auth/AuthGuard'],
+      access: 'isUser',
+    },
+
+    {
+      name: 'Tin nhắn',
+      path: '/conversation',
+      component: './Conversation/ConversationPage.tsx',
+      wrappers: ['@/pages/Auth/AuthGuard'],
+      access: 'isUser',
     },
     {
-      path: "/auth/register",
+      name: 'Đăng xuất',
+      path: '/auth/log-out',
+      component: './Auth/LogoutPage.tsx',
+      wrappers: ['@/pages/Auth/AuthGuard'],
+      access: 'isUser',
+    },
+    {
+      path: '/profile/complete',
+      component: './User/CompleteProfilePage.tsx',
+      layout: false,
+      access: 'isUser',
+    },
+    {
+      path: '/auth/register',
       component: './Auth/RegisterPage.tsx',
-      layout: false
+      layout: false,
     },
     {
-      path: "/auth/login",
+      path: '/auth/login',
       component: './Auth/LoginPage.tsx',
-      layout: false
-    }
+      layout: false,
+    },
+    {
+      path: '/*',
+      component: './Error/NotFoundPage.tsx',
+      layout: false,
+    },
   ],
   npmClient: 'pnpm',
+  history: {
+    type: 'browser',
+  },
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  base: '/',
+  outputPath: 'dist',
 });
-

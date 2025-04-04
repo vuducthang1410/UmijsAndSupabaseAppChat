@@ -59,3 +59,7 @@ export interface IdentityData {
     phone_verified?: boolean;
     sub?: string;
 }
+export interface JwtPayload {
+    role?: string; // Key role trong claims
+    exp?: number;  // Expiration time
+}

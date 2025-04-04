@@ -1,5 +1,5 @@
 import { supabase } from '@/config/supabaseConfig';
-import { Alert, Button, Card, Form, Input } from 'antd';
+import { Alert, Button, Card, Form, Input, message } from 'antd';
 import { useState } from 'react';
 import { AuthDataRq } from 'types/auth';
 
@@ -15,12 +15,17 @@ const SignupForm = () => {
       email: values.email || '',
       password: values.password || '',
     });
-  
+    await supabase.from('user_roles').insert([
+      {
+        user_id: data?.user?.id,
+        role_id: '73baccb4-ef93-4f8c-9077-cbc83473717a',
+      },
+    ]);
     setLoading(false);
     if (error) {
       setError(error.message);
     } else {
-      alert('User created successfully! Check your email to verify.');
+      message.success('User created successfully! Check your email to verify.');
     }
   };
 

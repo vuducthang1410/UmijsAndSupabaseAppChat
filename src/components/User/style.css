@@ -1,0 +1,5 @@
+/* Tắt padding cho các lớp cần thiết */
+.ant-pro-page-container-children-container,
+.ant-pro-page-container-children-container-no-header {
+  padding: 0 !important;
+}
