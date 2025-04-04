@@ -38,7 +38,11 @@ jobs:
           
           # Thực hiện các lệnh git
           git add --all
-          git commit -m "Deploy to GitHub Pages"
+          
+          # Thực hiện commit với thông điệp đúng định dạng
+          git commit -m "chore(deploy): deploy to GitHub Pages"
+          
+          # Đẩy commit lên nhánh gh-pages
           git push https://github.com/${{ github.repository }}.git HEAD:gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
