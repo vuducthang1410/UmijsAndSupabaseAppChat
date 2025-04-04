@@ -11,6 +11,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Explicitly grant write permission to contents (needed for pushing changes)
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,7 +21,7 @@ jobs:
       - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Cài đặt Node.js 20
+          node-version: '20'
 
       - name: Install latest pnpm
         run: npm install -g pnpm
@@ -26,20 +29,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Commit changes
+      - name: Commit changes (if any)
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@users.noreply.github.com"
           git add .
           # Kiểm tra xem có thay đổi nào cần commit không
-          if git diff --cached --exit-code; then
-            echo "No changes to commit"
-          else
+          if [[ $(git status --porcelain) ]]; then
             git commit -m "Deploy to GitHub Pages"
+          else
+            echo "No changes to commit"
           fi
 
       - name: Push changes
         run: |
-          git push https://github-actions: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@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git
+          git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
