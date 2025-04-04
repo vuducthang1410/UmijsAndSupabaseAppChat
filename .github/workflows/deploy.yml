@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Explicitly grant write permission to contents (needed for pushing changes)
+      contents: write  # Cấp quyền ghi cho nội dung (cần khi push thay đổi)
 
     steps:
       - name: Checkout code
@@ -28,24 +28,16 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        
-      - name: Build project
-        run: pnpm run build
 
-      - name: Commit changes (if any)
+      - name: Build project
+        run: pnpm run build  # Build để tạo thư mục dist/
+
+      - name: Deploy to GitHub Pages
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@users.noreply.github.com"
-          git add .
-          # Kiểm tra xem có thay đổi nào cần commit không
-          if [[ $(git status --porcelain) ]]; then
-            git commit -m "Deploy to GitHub Pages"
-          else
-            echo "No changes to commit"
-          fi
-
-      - name: Push changes
-        run: |
-          git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git
+          git add dist/*  # Thêm tất cả file từ thư mục dist/
+          git commit -m "Deploy to GitHub Pages"
+          git push --force "https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git" main:gh-pages  # Push lên branch gh-pages
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
