@@ -3,46 +3,51 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # Thay "main" bằng nhánh bạn muốn deploy từ đó (ví dụ "master")
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
+      # Checkout mã nguồn
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Cài đặt node.js và pnpm (hoặc npm, yarn nếu bạn dùng chúng)
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the project
-        run: npm run build
-
-      - name: Deploy to GitHub Pages
-        run: |
-          # Xóa remote origin nếu nó đã tồn tại
-          git remote rm origin || echo "Remote 'origin' does not exist, skipping..."
+          node-version: '16'  # Hoặc bất kỳ phiên bản node.js nào bạn đang dùng
           
-          # Cấu hình thông tin người dùng cho git
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm  # Cài đặt pnpm nếu bạn đang dùng pnpm
+          pnpm install
+
+      # Build ứng dụng Umijs
+      - name: Build app
+        run: pnpm run build
+
+      # Set up Git config để thực hiện commit
+      - name: Set up Git config
+        run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Tạo một commit mới và push lên GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: |
+          # Xóa remote origin cũ
+          git remote rm origin
+          # Thêm remote mới với token
+          git remote add origin https://github.com/${{ github.repository }}.git
           
-          # Thêm lại remote origin với token
-          git remote add origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
-          
-          # Thực hiện các lệnh git
+          # Thực hiện commit và push lên nhánh gh-pages
           git add --all
-          
-          # Thực hiện commit với thông điệp đúng định dạng
           git commit -m "chore(deploy): deploy to GitHub Pages"
-          
-          # Đẩy commit lên nhánh gh-pages
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages      
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages
+
+      # Xóa build folder sau khi deploy (tuỳ chọn)
+      - name: Clean up build
+        run: |
+          rm -rf dist
