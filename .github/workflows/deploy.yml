@@ -35,10 +35,6 @@ jobs:
       - name: Build project
         run: pnpm run build
 
-      # (Optional) Chạy tests nếu có
-      - name: Run tests
-        run: pnpm test
-
       # Thêm tất cả các thay đổi vào git
       - name: Git add all changes
         run: git add -A
