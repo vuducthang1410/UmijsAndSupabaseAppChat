@@ -63,7 +63,7 @@ export default defineConfig({
   history: {
     type: 'browser',
   },
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/', 
   base: '/',
   outputPath: 'dist',
 });
