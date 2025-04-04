@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[49],{97867:function(o,a,u){u.r(a);var t=u(71732),c=u(51114),l=u(75271),n=function(){var e=(0,t.useDispatch)();return(0,l.useEffect)(function(){e({type:"auth/logout",callback:function(s){s.isSuccess?(c.ZP.success(s.message),t.history.push("/auth/login")):c.ZP.error(s.message)}})},[]),null};a.default=n}}]);
