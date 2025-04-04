@@ -24,7 +24,7 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Deploy to GitHub Pages
+        - name: Deploy to GitHub Pages
         run: |
           # Xóa remote origin nếu nó đã tồn tại
           git remote rm origin || echo "Remote 'origin' does not exist, skipping..."
@@ -33,8 +33,8 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Thêm lại remote origin
-          git remote add origin https://github.com/${{ github.repository }}.git
+          # Thêm lại remote origin với token
+          git remote add origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
           
           # Thực hiện các lệnh git
           git add --all
@@ -43,6 +43,6 @@ jobs:
           git commit -m "chore(deploy): deploy to GitHub Pages"
           
           # Đẩy commit lên nhánh gh-pages
-          git push https://github.com/${{ github.repository }}.git HEAD:gh-pages
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages      
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
