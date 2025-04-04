@@ -26,9 +26,17 @@ jobs:
 
       - name: Deploy to GitHub Pages
         run: |
+          # Xóa remote origin nếu nó đã tồn tại
+          git remote rm origin || echo "Remote 'origin' does not exist, skipping..."
+          
+          # Cấu hình thông tin người dùng cho git
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Thêm lại remote origin
           git remote add origin https://github.com/${{ github.repository }}.git
+          
+          # Thực hiện các lệnh git
           git add --all
           git commit -m "Deploy to GitHub Pages"
           git push https://github.com/${{ github.repository }}.git HEAD:gh-pages
