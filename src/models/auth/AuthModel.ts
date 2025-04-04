@@ -123,7 +123,7 @@ const useAuth: AuthModel = {
             try {
                 const urlAvatar = yield call(uploadFile, payload.userId, payload.file)
                 const response = yield call(completeProfile, { name: payload.name, avatar: urlAvatar, id: payload.userId, is_online: true })
-                if (response == true) {
+                if (response === true) {
                     yield put({ type: 'isCompleteProfile', payload: true })
                 }
                 callback({ isSuccess: true, message: "Hoàn thiện thông tin thành công!!!" })

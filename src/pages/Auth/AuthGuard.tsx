@@ -22,7 +22,7 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = () => {
     }
   };
   useEffect(() => {
-    if (!data && isLogin == false) {
+    if (!data && isLogin === false) {
       if (location.pathname !== '/logout')
         localStorage.setItem('pathname', location.pathname);
       history.push('/auth/login');
