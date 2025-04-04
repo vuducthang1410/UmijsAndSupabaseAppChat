@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Hoặc bất kỳ phiên bản node.js nào bạn đang dùng
+          node-version: '20'  # Hoặc bất kỳ phiên bản node.js nào bạn đang dùng
           
       - name: Install dependencies
         run: |
