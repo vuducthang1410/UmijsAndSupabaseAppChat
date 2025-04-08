@@ -37,7 +37,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@users.noreply.github.com"
           git add dist/*  # Thêm tất cả file từ thư mục dist/
-          git commit -m "Deploy to GitHub Pages"
+          git commit -m "Deploy to GitHub Pages" --no-verify
           git push --force "https://github-actions:${{ secrets.GH_TOKEN }}@github.com/vuducthang1410/UmijsAndSupabaseAppChat.git" main:gh-pages  # Push lên branch gh-pages
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
