@@ -114,6 +114,7 @@ export async function getHistoryMessage(conversation_id: string): Promise<Messag
         .from('messages')
         .select("*")
         .eq('conversation_id', conversation_id)
+        .order('sent_at', { ascending: false });
     console.log(data)
     if (error) {
         console.error("Supabase Error:", error);
