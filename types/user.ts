@@ -25,5 +25,6 @@ export interface Message{
   sender_id:string,
   send_at:string
   conversation_id:string,
-  message:string
+  message:string,
+  type_message:string
 }

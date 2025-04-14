@@ -32,7 +32,7 @@ const UserProfile: React.FC = () => {
       payload: {
         file: userProfile.avatar,
         name: userProfile.name,
-        userId: authData.user.user.id,
+        userId: authData.user.id,
       },
       callback: (reponse: DataCallback<string>) => {
         if (reponse.isSuccess) {

@@ -35,7 +35,7 @@ export default defineConfig({
       path: '/auth/log-out',
       component: './Auth/LogoutPage.tsx',
       wrappers: ['@/pages/Auth/AuthGuard'],
-      access: 'isUser',
+      // access: 'isUser',
     },
     {
       path: '/profile/complete',
@@ -60,10 +60,4 @@ export default defineConfig({
     },
   ],
   npmClient: 'pnpm',
-  history: {
-    type: 'browser',
-  },
-  publicPath: '/', 
-  base: '/',
-  outputPath: 'dist',
 });

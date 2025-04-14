@@ -1,8 +1,12 @@
 import { supabase } from '@/config/supabaseConfig';
-import { getHistoryMessage } from '@/services/conversation/user';
-import { SendOutlined } from '@ant-design/icons';
+import {
+  getHistoryMessage,
+  sendFileMessage,
+} from '@/services/conversation/user';
+import { PictureOutlined, SendOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from '@umijs/max';
-import { Button, Input, Layout, message, Typography } from 'antd';
+import { Button, Input, Layout, message, Typography, Upload } from 'antd';
+// import { UploadOutlined, SendOutlined, PictureOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { Message } from 'types/user';
 
@@ -24,38 +28,51 @@ const ChatWindow: React.FC = ({}) => {
     setNewMessage('');
   };
   useEffect(() => {
-    const channel = supabase
-      .channel('supabase_realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'messages' },
-        (payload) => {
-          if (payload.new) {
-            setMessageList((prev: Message[]) => [
-              ...prev,
-              typeof payload.new === 'string'
-                ? JSON.parse(payload.new)
-                : payload.new,
-            ]);
-          }
-        },
-      );
+    if (userIsFocus && userIsFocus.conversation_id !== '') {
+      const channel = supabase
+        .channel(userIsFocus.conversation_id)
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'messages' },
+          (payload) => {
+            if (payload.new) {
+              console.log('first', userIsFocus.conversation_id);
+              if (
+                userIsFocus.conversation_id !== '' &&
+                userIsFocus.conversation_id === payload.new.conversation_id
+              )
+                setMessageList((prev: Message[]) => [
+                  ...prev,
+                  typeof payload.new === 'string'
+                    ? JSON.parse(payload.new)
+                    : payload.new,
+                ]);
+            }
+          },
+        );
 
-    // Bắt đầu lắng nghe
-    channel.subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        console.log('Successfully subscribed to the channel');
-      }
-    });
-    console.log('first');
-  }, []);
+      // Bắt đầu lắng nghe
+      channel.subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Successfully subscribed to the channel');
+        }
+      });
+    }
+  }, [userIsFocus]);
   const loadHistory = async (conversation_id: string) => {
     const response: Message[] = await getHistoryMessage(conversation_id);
     setMessageList(response);
   };
+  const handleSendImageMessage = (file: File) => {
+    sendFileMessage(userIsFocus.conversation_id, authData.user.id, file);
+  };
   useEffect(() => {
+    console.log('first');
     if (userIsFocus.conversation_id !== '')
       loadHistory(userIsFocus.conversation_id);
+    else {
+      setMessageList([]);
+    }
   }, [userIsFocus]);
   return (
     <>
@@ -79,7 +96,7 @@ const ChatWindow: React.FC = ({}) => {
             borderRadius: 9999,
             objectFit: 'cover',
             display: 'block',
-            margin:10
+            margin: 10,
           }}
         />
         <Text strong style={{ fontSize: '18px' }}>
@@ -114,7 +131,11 @@ const ChatWindow: React.FC = ({}) => {
                 wordBreak: 'break-word',
               }}
             >
-              <Text style={{ fontSize: '15px' }}>{msg.message}</Text>
+              {msg.type_message === 'text' ? (
+                <Text style={{ fontSize: '15px' }}>{msg.message}</Text>
+              ) : (
+                <img src={msg.message} style={{width:300}}/>
+              )}
             </div>
           );
         })}
@@ -129,6 +150,24 @@ const ChatWindow: React.FC = ({}) => {
           borderTop: '1px solid #e8e8e8',
         }}
       >
+        <Upload
+          accept="image/*"
+          showUploadList={false}
+          beforeUpload={(file) => handleSendImageMessage(file)}
+        >
+          <Button
+            icon={<PictureOutlined />}
+            style={{
+              borderRadius: '50%',
+              marginRight: 12,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        </Upload>
         <Input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

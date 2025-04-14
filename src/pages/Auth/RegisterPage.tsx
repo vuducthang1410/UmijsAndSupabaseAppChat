@@ -1,8 +1,8 @@
 import { supabase } from '@/config/supabaseConfig';
+import { history } from '@umijs/max';
 import { Alert, Button, Card, Form, Input, message } from 'antd';
 import { useState } from 'react';
 import { AuthDataRq } from 'types/auth';
-
 const SignupForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -14,6 +14,9 @@ const SignupForm = () => {
     const { data, error } = await supabase.auth.signUp({
       email: values.email || '',
       password: values.password || '',
+      options: {
+        emailRedirectTo: 'https://umijs-and-supabase-app-chat.vercel.app/auth/login',
+      },
     });
     await supabase.from('user_roles').insert([
       {
@@ -25,6 +28,7 @@ const SignupForm = () => {
     if (error) {
       setError(error.message);
     } else {
+      history.push('/auth/login');
       message.success('User created successfully! Check your email to verify.');
     }
   };

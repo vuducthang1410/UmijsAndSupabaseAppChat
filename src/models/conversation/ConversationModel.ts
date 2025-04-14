@@ -127,7 +127,7 @@ const useConversation: ConversationModel = {
                 const { authData } = yield select((state: any) => state.auth)
                 console.log(userIsFocus)
                 if (userIsFocus.conversation_id === "") {
-                    const convertionId = yield call(createConversation, authData.user.user.id, userIsFocus.user_id)
+                    const convertionId = yield call(createConversation, authData.user.id, userIsFocus.user_id)
                     yield put({ type: 'setConversationId', payload: convertionId })
                     const response = yield call(sendMessage, convertionId, authData.user.id, payload)
                     console.log(response)

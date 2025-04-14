@@ -9,6 +9,7 @@ export function trim(str: string) {
 export function getRoleInToken() {
   const authDataRp = getUserInfoInLocalStorage()
   const token = authDataRp?.access_token
+  console.log(token)
   if (!token) return null;
 
   try {
@@ -29,7 +30,7 @@ export const isEmptyObject = (obj: any) => {
   if (Array.isArray(obj)) {
     return obj.length === 0;
   }
-  
+
   // Kiểm tra nếu đối tượng là một đối tượng thuần túy rỗng
   return obj && typeof obj === 'object' && obj.constructor === Object && Object.keys(obj).length === 0;
 };
