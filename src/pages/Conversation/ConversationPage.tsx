@@ -33,6 +33,18 @@ const ConversationPage = () => {
     });
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  const shouldShowSidebar =
+    !isMobile || (isMobile && !userIsFocus?.conversation_id);
+  const shouldShowChat =
+    !isMobile || (isMobile && userIsFocus?.conversation_id);
+
   const handleClickUser = (
     userId: string,
     avatar: string,
@@ -58,20 +70,20 @@ const ConversationPage = () => {
       });
   }, [profileSearch, authData]);
   return (
-    <Layout style={{ minHeight: '100vh', maxHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', maxHeight: '100vh' ,overflow:'hidden'}}>
       <Row gutter={16} style={{ height: '100%' }}>
         {/* Sidebar - Danh sách cuộc trò chuyện */}
         <Col
-          span={6}
+          xs={24}
+          sm={8}
+          md={6}
           style={{
             borderRight: '1px solid #f0f0f0',
-            paddingLeft: '30px',
-            paddingRight: '30px',
-            paddingTop: 30,
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100vh',
+            padding: 20,
             background: '#fff',
+            display: shouldShowSidebar ? 'flex' : 'none',
+            flexDirection: 'column',
+            height: '100%',
           }}
         >
           <Text
@@ -202,10 +214,16 @@ const ConversationPage = () => {
         </Col>
         {/* Chat Window */}
         <Col
-          span={18}
-          style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+          xs={24}
+          sm={16}
+          md={18}
+          style={{
+            height: '100%',
+            display: shouldShowChat ? 'flex' : 'none',
+            flexDirection: 'column',
+          }}
         >
-          {userIsFocus.user_id !== '' && <ChatWindow />}
+          {userIsFocus.user_id !== '' && <ChatWindow isMobile={isMobile} />}
         </Col>
       </Row>
     </Layout>

@@ -41,6 +41,7 @@ export default defineConfig({
       path: '/profile/complete',
       component: './User/CompleteProfilePage.tsx',
       layout: false,
+      wrappers: ['@/pages/Auth/AuthGuard'],
       access: 'isUser',
     },
     {

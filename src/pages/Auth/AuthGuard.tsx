@@ -16,8 +16,8 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = () => {
   );
   const data = getUserInfoInLocalStorage();
   const checkCompleteProfile = () => {
-    console.log(isCheckProfile,isCompleteProfile)
-    if (!isCompleteProfile&&isCheckProfile) {
+    console.log(isCheckProfile, isCompleteProfile);
+    if (!isCompleteProfile && isCheckProfile) {
       history.push('/profile/complete');
     }
   };
@@ -27,7 +27,7 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = () => {
         localStorage.setItem('pathname', location.pathname);
       history.push('/auth/login');
     }
-    console.log(authData,isEmptyObject(authData))
+    console.log(authData, isEmptyObject(authData));
     if (authData === undefined || isEmptyObject(authData)) {
       console.log('first');
       if (data) {
@@ -52,8 +52,14 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = () => {
     }
   }, [authData]);
   useEffect(() => {
-    console.log(isCheckProfile,isCompleteProfile)
-    checkCompleteProfile();
+    console.log(isCheckProfile, isCompleteProfile);
+    if (!isEmptyObject(authData)) {
+      dispatch({
+        type: 'auth/checkCompleteProfile',
+        payload: authData.user.id,
+        callback: checkCompleteProfile,
+      });
+    } else checkCompleteProfile();
   }, [isCheckProfile]);
   return <Outlet></Outlet>;
 };

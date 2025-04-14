@@ -17,6 +17,7 @@ export interface ConversationModel {
         setHistoryConversation: Reducer<ConversationModel>;
         setUserIsFocus: Reducer<ConversationModel>;
         setConversationId: Reducer<ConversationModel>;
+        clearUserIsFocus: Reducer<ConversationModel>;
     },
     effects: {
         searchUserByName: Effect;
@@ -57,6 +58,13 @@ const useConversation: ConversationModel = {
                     is_online: action.payload.is_online,
                     user_id: action.payload.user_id
                 }
+            }
+        },
+        clearUserIsFocus(state, action) {
+            console.log(action)
+            return {
+                ...state,
+                userIsFocus: {}
             }
         },
 

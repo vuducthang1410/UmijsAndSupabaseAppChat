@@ -47,6 +47,9 @@ export async function completeProfile(completeData: Profile) {
     const { data, error } = await supabase
         .from('users')
         .upsert([completeData]);
+    if (error)
+        throw new Error(error.message)
+    return true
 }
 export async function uploadFile(userId: string, file: File) {
     try {

@@ -69,7 +69,6 @@ const useAuth: AuthModel = {
             try {
                 yield put({ type: 'setLoading', payload: true })
                 const data = yield getProfile(payload)
-                console.log("first", data)
                 if (data)
                     yield put({ type: 'setIsCompleteProfile', payload: true })
                 else
@@ -123,8 +122,9 @@ const useAuth: AuthModel = {
             try {
                 const urlAvatar = yield call(uploadFile, payload.userId, payload.file)
                 const response = yield call(completeProfile, { name: payload.name, avatar: urlAvatar, id: payload.userId, is_online: true })
+                console.log(response)
                 if (response === true) {
-                    yield put({ type: 'isCompleteProfile', payload: true })
+                    yield put({ type: 'setIsCompleteProfile', payload: true })
                 }
                 callback({ isSuccess: true, message: "Hoàn thiện thông tin thành công!!!" })
             } catch (error: any) {

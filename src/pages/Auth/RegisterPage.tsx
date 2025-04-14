@@ -15,7 +15,7 @@ const SignupForm = () => {
       email: values.email || '',
       password: values.password || '',
       options: {
-        emailRedirectTo: 'https://umijs-and-supabase-app-chat.vercel.app/auth/login',
+        emailRedirectTo: 'http://localhost:3456/auth/login',
       },
     });
     await supabase.from('user_roles').insert([

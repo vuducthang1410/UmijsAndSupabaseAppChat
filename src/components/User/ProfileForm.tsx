@@ -26,7 +26,6 @@ const UserProfile: React.FC = () => {
     return false;
   };
   const completeProfile = () => {
-    console.log('first', authData);
     dispatch({
       type: 'auth/completeProfile',
       payload: {

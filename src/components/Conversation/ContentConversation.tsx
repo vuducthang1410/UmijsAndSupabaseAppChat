@@ -3,7 +3,12 @@ import {
   getHistoryMessage,
   sendFileMessage,
 } from '@/services/conversation/user';
-import { PictureOutlined, SendOutlined } from '@ant-design/icons';
+import { isEmptyObject } from '@/utils/format';
+import {
+  ArrowLeftOutlined,
+  PictureOutlined,
+  SendOutlined,
+} from '@ant-design/icons';
 import { useDispatch, useSelector } from '@umijs/max';
 import { Button, Input, Layout, message, Typography, Upload } from 'antd';
 // import { UploadOutlined, SendOutlined, PictureOutlined } from '@ant-design/icons';
@@ -13,7 +18,10 @@ import { Message } from 'types/user';
 const { Header, Content } = Layout;
 const { Text } = Typography;
 
-const ChatWindow: React.FC = ({}) => {
+interface propsData {
+  isMobile: boolean;
+}
+const ChatWindow: React.FC<propsData> = ({ isMobile }) => {
   const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState('');
   const { userIsFocus } = useSelector((state: any) => state.conversation);
@@ -67,15 +75,21 @@ const ChatWindow: React.FC = ({}) => {
     sendFileMessage(userIsFocus.conversation_id, authData.user.id, file);
   };
   useEffect(() => {
-    console.log('first');
-    if (userIsFocus.conversation_id !== '')
+    console.log(userIsFocus, isEmptyObject(userIsFocus));
+    if (!isEmptyObject(userIsFocus) && userIsFocus.conversation_id !== '') {
       loadHistory(userIsFocus.conversation_id);
-    else {
+    } else {
       setMessageList([]);
     }
   }, [userIsFocus]);
   return (
-    <>
+    <div
+      style={{
+        // paddingTop: isMobile ? 50 : 0,
+        overflowY: 'hidden',
+        height: '100vh',
+      }}
+    >
       {/* Header */}
       <Header
         style={{
@@ -88,6 +102,14 @@ const ChatWindow: React.FC = ({}) => {
           alignItems: 'center',
         }}
       >
+        <Button
+          style={{ background: '#f5f5f5', border: 0, boxShadow: '0 0 0 0 0 0' }}
+          onClick={() => {
+            dispatch({ type: 'conversation/clearUserIsFocus' });
+          }}
+        >
+          <ArrowLeftOutlined size={50} />
+        </Button>
         <img
           src={userIsFocus.avatar}
           style={{
@@ -112,6 +134,8 @@ const ChatWindow: React.FC = ({}) => {
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column-reverse', // 👈 Đảo thứ tự hiển thị
+          overflow: 'scroll',
+          height: '78vh',
         }}
       >
         {[...messageList].reverse().map((msg, index) => {
@@ -134,7 +158,7 @@ const ChatWindow: React.FC = ({}) => {
               {msg.type_message === 'text' ? (
                 <Text style={{ fontSize: '15px' }}>{msg.message}</Text>
               ) : (
-                <img src={msg.message} style={{width:300}}/>
+                <img src={msg.message} style={{ width: '100%' }} />
               )}
             </div>
           );
@@ -191,7 +215,7 @@ const ChatWindow: React.FC = ({}) => {
           }}
         />
       </div>
-    </>
+    </div>
   );
 };
 
