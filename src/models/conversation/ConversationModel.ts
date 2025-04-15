@@ -129,7 +129,6 @@ const useConversation: ConversationModel = {
         },
         *sendMessage({ payload, callback }, { call, put, select }): Generator<any, void, any> {
             try {
-                console.log("first")
                 const { userIsFocus } = yield select((state: any) => state.conversation)
                 const data = yield select((state: any) => state.conversation)
                 const { authData } = yield select((state: any) => state.auth)

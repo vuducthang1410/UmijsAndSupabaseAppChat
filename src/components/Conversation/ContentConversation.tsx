@@ -66,7 +66,7 @@ const ChatWindow: React.FC<propsData> = ({ isMobile }) => {
         }
       });
     }
-  }, [userIsFocus]);
+  }, [userIsFocus.conversation_id]);
   const loadHistory = async (conversation_id: string) => {
     const response: Message[] = await getHistoryMessage(conversation_id);
     setMessageList(response);
@@ -85,7 +85,6 @@ const ChatWindow: React.FC<propsData> = ({ isMobile }) => {
   return (
     <div
       style={{
-        // paddingTop: isMobile ? 50 : 0,
         overflowY: 'hidden',
         height: '100vh',
       }}
