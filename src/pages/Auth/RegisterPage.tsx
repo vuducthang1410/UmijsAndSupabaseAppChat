@@ -14,9 +14,9 @@ const SignupForm = () => {
     const { data, error } = await supabase.auth.signUp({
       email: values.email || '',
       password: values.password || '',
-      // options: {
-      //   emailRedirectTo: 'https://klb-chat.vercel.app/auth/login',
-      // },
+      options: {
+        emailRedirectTo: 'https://klb-chat.vercel.app/auth/login',
+      },
     });
     await supabase.from('user_roles').insert([
       {
